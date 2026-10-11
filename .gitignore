@@ -1,0 +1,11 @@
+# Logs
+*.log
+npm-debug.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Dependencies (if any added later)
+node_modules/

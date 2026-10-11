@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Repair Status - KK Mobile Shop</title>
+    <meta name="description" content="Track your smartphone repair status live at KK Mobile Shop. Check diagnostics, progress stepper, and expected delivery date.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="site-header">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-logo">
+                <div class="brand-icon-box">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <div class="brand-name">KK <span>Mobile</span> Shop</div>
+            </a>
+
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html#home" class="nav-link">Home</a></li>
+                    <li><a href="index.html#services" class="nav-link">Services</a></li>
+                    <li><a href="index.html#repair-booking-section" class="nav-link">Book Repair</a></li>
+                    <li><a href="track.html" class="nav-link active">Track Status</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                    <li><a href="admin.html" class="nav-link" style="color: #38bdf8;"><i class="fa-solid fa-lock" style="font-size: 0.8rem;"></i> Admin</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="theme-toggle-btn" aria-label="Toggle Dark/Light Mode">
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+                <a href="tel:9955038309" class="btn btn-primary btn-sm">
+                    <i class="fa-solid fa-phone"></i> <span>9955038309</span>
+                </a>
+                <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="section-spacing" style="padding-top: 4rem;">
+        <div class="container tracking-wrapper">
+            
+            <!-- Page Title -->
+            <div class="section-header" style="margin-bottom: 2.5rem;">
+                <div class="section-tag"><i class="fa-solid fa-satellite-dish"></i> Realtime Diagnostics</div>
+                <h1 class="section-title">Track Mobile <span class="gradient-text">Repair Status</span></h1>
+                <p class="section-desc">Enter your 5-character Repair ID to view live hardware progress, technician diagnostics, and pickup date.</p>
+            </div>
+
+            <!-- Search Box Card -->
+            <div class="glass-card track-search-card">
+                <form id="trackStatusForm">
+                    <label for="trackRepairIdInput" style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); display: block;">
+                        Enter Your Repair ID
+                    </label>
+                    <div class="track-input-group">
+                        <input 
+                            type="text" 
+                            id="trackRepairIdInput" 
+                            class="form-control" 
+                            placeholder="e.g. KK-78210" 
+                            style="font-size: 1.15rem; font-weight: 700; text-transform: uppercase; text-align: center; letter-spacing: 0.05em;" 
+                            required>
+                        <button type="submit" class="btn btn-primary btn-lg" style="white-space: nowrap;">
+                            <i class="fa-solid fa-magnifying-glass"></i> Track Now
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Demo IDs Quick Click Pills -->
+                <div style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                    <span>Quick test sample records: </span>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('trackRepairIdInput').value='KK-78210'; document.getElementById('trackStatusForm').dispatchEvent(new Event('submit'));" style="margin: 0.2rem;">
+                        KK-78210 (In Progress)
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('trackRepairIdInput').value='KK-54391'; document.getElementById('trackStatusForm').dispatchEvent(new Event('submit'));" style="margin: 0.2rem;">
+                        KK-54391 (Ready for Pickup)
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('trackRepairIdInput').value='KK-38290'; document.getElementById('trackStatusForm').dispatchEvent(new Event('submit'));" style="margin: 0.2rem;">
+                        KK-38290 (Waiting for Parts)
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('trackRepairIdInput').value='KK-12948'; document.getElementById('trackStatusForm').dispatchEvent(new Event('submit'));" style="margin: 0.2rem;">
+                        KK-12948 (Delivered)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Empty Initial State Banner -->
+            <div id="trackingEmptyState" class="glass-card text-center" style="padding: 4rem 2rem; border-style: dashed;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(37, 99, 235, 0.15); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto; color: #38bdf8; font-size: 2.2rem;">
+                    <i class="fa-solid fa-barcode"></i>
+                </div>
+                <h3 style="font-size: 1.4rem; margin-bottom: 0.6rem;">Awaiting Repair ID</h3>
+                <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
+                    Please type your unique Repair ID above or click any of the sample records to see the interactive 6-step timeline.
+                </p>
+            </div>
+
+            <!-- Not Found State Banner -->
+            <div id="trackingNotFoundState" class="glass-card text-center" style="padding: 4rem 2rem; display: none; border-color: rgba(244, 63, 94, 0.4);">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(244, 63, 94, 0.15); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto; color: #f43f5e; font-size: 2.2rem;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 style="font-size: 1.4rem; margin-bottom: 0.6rem; color: #f43f5e;">No Record Found</h3>
+                <p style="color: var(--text-secondary); max-width: 520px; margin: 0 auto 1.5rem auto;">
+                    We could not find any active repair record matching ID "<span id="searchedRepairId" style="font-weight: 700; color: var(--text-primary);"></span>". Please check your job sheet or reach out on WhatsApp.
+                </p>
+                <div style="display: flex; justify-content: center; gap: 0.85rem;">
+                    <a href="https://wa.me/919955038309" target="_blank" class="btn btn-whatsapp">
+                        <i class="fa-brands fa-whatsapp"></i> Contact Shop on WhatsApp
+                    </a>
+                    <a href="index.html#repair-booking-section" class="btn btn-secondary">
+                        <i class="fa-solid fa-plus"></i> Book New Repair
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tracking Result Section (Hidden until valid search) -->
+            <div id="trackingResultContainer" style="display: none;">
+                
+                <!-- Live Stepper Card -->
+                <div class="glass-card stepper-container">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1.25rem;">
+                        <div>
+                            <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">REPAIR TRACKING ORDER</span>
+                            <h2 style="font-size: 1.8rem; font-family: var(--font-heading); color: #38bdf8;" id="trackResultId">KK-00000</h2>
+                        </div>
+                        <div>
+                            <span id="trackResultStatusBadge" class="status-pill status-progress">In Progress</span>
+                        </div>
+                    </div>
+
+                    <!-- 6-Stage Progress Stepper -->
+                    <div class="stepper-progress-bar">
+                        <div class="stepper-active-line" id="stepperActiveLine"></div>
+                        <div id="stepperNodesContainer" style="display: contents;">
+                            <!-- Populated dynamically: Received -> Under Inspection -> Waiting for Parts -> Repair In Progress -> Ready for Pickup -> Delivered -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Device & Customer Information Grid -->
+                <div class="glass-card" style="padding: 2.2rem; margin-bottom: 2rem;">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem;">
+                        <i class="fa-solid fa-mobile-screen" style="color: #38bdf8;"></i> Device & Service Details
+                    </h3>
+
+                    <div class="track-details-grid">
+                        <div class="detail-block">
+                            <div class="detail-label">Customer Name</div>
+                            <div class="detail-value" id="trackResultCust">-</div>
+                        </div>
+
+                        <div class="detail-block">
+                            <div class="detail-label">Registered Phone</div>
+                            <div class="detail-value" id="trackResultPhone">-</div>
+                        </div>
+
+                        <div class="detail-block">
+                            <div class="detail-label">Phone Model</div>
+                            <div class="detail-value" id="trackResultDevice">-</div>
+                        </div>
+
+                        <div class="detail-block">
+                            <div class="detail-label">Service Type</div>
+                            <div class="detail-value" id="trackResultIssue">-</div>
+                        </div>
+
+                        <div class="detail-block">
+                            <div class="detail-label">Date Submitted</div>
+                            <div class="detail-value" id="trackResultDate">-</div>
+                        </div>
+
+                        <div class="detail-block" style="border-color: rgba(56, 189, 248, 0.4);">
+                            <div class="detail-label" style="color: #38bdf8;">Expected Delivery Date</div>
+                            <div class="detail-value" style="color: #38bdf8;" id="trackResultExpected">-</div>
+                        </div>
+
+                        <div class="detail-block" style="grid-column: span 2;">
+                            <div class="detail-label">Reported Issue</div>
+                            <div style="font-size: 1rem; color: var(--text-primary); margin-top: 0.2rem;" id="trackResultDesc">-</div>
+                        </div>
+
+                        <div class="detail-block" style="background: rgba(37, 99, 235, 0.12); border-color: rgba(59, 130, 246, 0.35);">
+                            <div class="detail-label" style="color: #60a5fa;">Technician Diagnostic Remarks</div>
+                            <div style="font-size: 0.95rem; color: #f8fafc; margin-top: 0.3rem;" id="trackResultNotes">
+                                Diagnostics completed.
+                            </div>
+                        </div>
+
+                        <div class="detail-block" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35);">
+                            <div class="detail-label" style="color: #34d399;">Estimated Total Cost</div>
+                            <div style="font-size: 1.4rem; font-weight: 800; color: #34d399;" id="trackResultCost">₹0</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 1rem; padding-top: 1.25rem; border-top: 1px solid var(--border-glass);">
+                        <button type="button" id="trackPrintBtn" class="btn btn-secondary">
+                            <i class="fa-solid fa-file-pdf"></i> Download PDF Receipt / Job Sheet
+                        </button>
+                        <a href="#" id="trackWhatsAppBtn" target="_blank" class="btn btn-whatsapp">
+                            <i class="fa-brands fa-whatsapp"></i> Chat with Technician Regarding This Device
+                        </a>
+                        <a href="tel:9955038309" class="btn btn-primary">
+                            <i class="fa-solid fa-phone"></i> Call Shop (9955038309)
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Store Pickup & Warranty Notice -->
+                <div class="glass-card" style="padding: 1.8rem; background: rgba(15, 23, 42, 0.4);">
+                    <div style="display: flex; gap: 1.25rem; align-items: flex-start;">
+                        <div style="font-size: 1.8rem; color: #38bdf8; margin-top: 0.2rem;">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <div>
+                            <h4 style="font-size: 1.15rem; margin-bottom: 0.4rem;">Pickup & Collection Instructions</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                                When your status indicates <strong>"Ready for Pickup"</strong>, you can collect your smartphone at KK Mobile Shop during business hours (9:30 AM - 9:00 PM). Please show this screen or your unique Repair ID at the delivery desk. All repairs are covered under our 90-day warranty policy!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <div style="font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem;">KK <span>Mobile</span> Shop</div>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.2rem;">
+                Contact: <strong>9955038309</strong> | Email: support@kkmobileshop.com
+            </p>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">
+                &copy; 2026 KK Mobile Shop. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp -->
+    <div class="floating-whatsapp">
+        <div class="whatsapp-tooltip">Chat with Technician</div>
+        <a href="https://wa.me/919955038309" target="_blank" class="whatsapp-bubble-btn" aria-label="Chat on WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <!-- Firebase SDK (Compat CDN) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    
+    <!-- Config & Scripts -->
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

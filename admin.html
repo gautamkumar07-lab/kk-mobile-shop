@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - KK Mobile Shop</title>
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Secure Login Modal (Displayed when not logged in) -->
+    <div class="modal-overlay active" id="adminLoginModal">
+        <div class="modal-box text-center" style="max-width: 440px;">
+            <div class="brand-icon-box" style="margin: 0 auto 1.25rem auto; width: 56px; height: 56px; font-size: 1.6rem;">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2 style="font-size: 1.6rem; margin-bottom: 0.35rem;">Admin Control Portal</h2>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.8rem;">
+                KK Mobile Shop - Secure Repair Management
+            </p>
+
+            <form id="adminLoginForm" style="text-align: left;">
+                <div class="form-group">
+                    <label for="adminEmail" class="form-label">Admin Email</label>
+                    <input type="email" id="adminEmail" class="form-control" placeholder="Enter authorized admin email" autocomplete="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="adminPassword" class="form-label">Password</label>
+                    <input type="password" id="adminPassword" class="form-control" placeholder="••••••••" autocomplete="current-password" required>
+                </div>
+
+                <button type="submit" id="adminLoginSubmitBtn" class="btn btn-primary btn-block btn-lg" style="margin-top: 1.25rem;">
+                    <i class="fa-solid fa-lock"></i> Secure Admin Login
+                </button>
+            </form>
+
+            <!-- Access Denied Alert Banner -->
+            <div id="loginErrorMessage" style="display: none; margin-top: 1.25rem; padding: 1rem; background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.45); border-radius: var(--radius-md); color: #f43f5e; font-size: 0.9rem; text-align: left;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.95rem;">
+                    <i class="fa-solid fa-ban"></i> Access Denied
+                </div>
+                <div style="font-size: 0.84rem; margin-top: 0.35rem; color: #fecdd3; line-height: 1.4;" id="loginErrorDetail">
+                    Invalid credentials or unauthorized account. Only the authorized administrator can access this portal.
+                </div>
+            </div>
+
+            <div style="margin-top: 1.8rem; border-top: 1px solid var(--border-glass); padding-top: 1.2rem;">
+                <a href="index.html" style="font-size: 0.88rem; color: var(--text-muted);"><i class="fa-solid fa-arrow-left"></i> Return to Main Website</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Main Screen (Visible after authentication) -->
+    <div id="adminDashboardArea" style="display: none;">
+        
+        <!-- Admin Header -->
+        <header class="admin-header">
+            <div class="container admin-header-flex">
+                <div style="display: flex; align-items: center; gap: 1.2rem;">
+                    <a href="index.html" class="brand-logo" style="font-size: 1.3rem;">
+                        <div class="brand-icon-box" style="width: 36px; height: 36px; font-size: 1rem;">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                        </div>
+                        <div class="brand-name">KK <span>Mobile</span> Shop <small style="font-size: 0.75rem; color: #38bdf8; font-weight: 600;">ADMIN</small></div>
+                    </a>
+                    
+                    <span id="dbSyncIndicator" style="font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem; padding: 0.25rem 0.75rem; background: rgba(15, 23, 42, 0.6); border-radius: var(--radius-full); border: 1px solid var(--border-glass);">
+                        <span class="pulse-dot"></span> Checking DB...
+                    </span>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 0.85rem;">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="openAddRepairModal()">
+                        <i class="fa-solid fa-plus"></i> New Repair
+                    </button>
+                    <button type="button" class="theme-toggle-btn" id="adminThemeToggle" title="Toggle Theme">
+                        <i class="fa-solid fa-sun"></i>
+                    </button>
+                    <a href="index.html" class="btn btn-secondary btn-sm" title="View Customer Website">
+                        <i class="fa-solid fa-globe"></i> Customer Site
+                    </a>
+                    <button type="button" id="adminLogoutBtn" class="btn btn-secondary btn-sm" title="Logout">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Content -->
+        <main class="container" style="padding-top: 2.5rem; padding-bottom: 4rem;">
+            
+            <!-- Statistics Cards Strip -->
+            <div class="admin-stats-grid">
+                <!-- Stat 1: Total Repairs -->
+                <div class="glass-card admin-stat-card">
+                    <div class="admin-stat-icon icon-blue">
+                        <i class="fa-solid fa-mobile-screen"></i>
+                    </div>
+                    <div>
+                        <div class="admin-stat-num" id="statTotalRepairs">0</div>
+                        <div class="admin-stat-label">Total Repairs</div>
+                    </div>
+                </div>
+
+                <!-- Stat 2: In Progress -->
+                <div class="glass-card admin-stat-card">
+                    <div class="admin-stat-icon icon-cyan">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                    </div>
+                    <div>
+                        <div class="admin-stat-num" id="statInProgress">0</div>
+                        <div class="admin-stat-label">In Progress / Inspecting</div>
+                    </div>
+                </div>
+
+                <!-- Stat 3: Waiting for Parts -->
+                <div class="glass-card admin-stat-card">
+                    <div class="admin-stat-icon icon-amber">
+                        <i class="fa-solid fa-boxes-packing"></i>
+                    </div>
+                    <div>
+                        <div class="admin-stat-num" id="statWaitingParts">0</div>
+                        <div class="admin-stat-label">Waiting for Parts</div>
+                    </div>
+                </div>
+
+                <!-- Stat 4: Ready for Pickup -->
+                <div class="glass-card admin-stat-card" style="border-color: rgba(16, 185, 129, 0.4);">
+                    <div class="admin-stat-icon icon-green">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div>
+                        <div class="admin-stat-num" id="statReady">0</div>
+                        <div class="admin-stat-label">Ready for Pickup</div>
+                    </div>
+                </div>
+
+                <!-- Stat 5: Revenue -->
+                <div class="glass-card admin-stat-card">
+                    <div class="admin-stat-icon icon-purple">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                    </div>
+                    <div>
+                        <div class="admin-stat-num" id="statRevenue">₹0</div>
+                        <div class="admin-stat-label">Total Billed / Est.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toolbar: Search, Filters, and Actions -->
+            <div class="admin-toolbar">
+                <div class="search-filter-wrap">
+                    <div style="position: relative; flex-grow: 1;">
+                        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 14px; color: var(--text-muted);"></i>
+                        <input 
+                            type="text" 
+                            id="adminSearchInput" 
+                            class="form-control" 
+                            placeholder="Search by Customer Name, Phone, ID, or Device Model..." 
+                            style="padding-left: 42px;">
+                    </div>
+
+                    <select id="adminStatusFilter" class="form-control" style="width: auto; min-width: 170px;">
+                        <option value="ALL">All Statuses</option>
+                        <option value="Received">Received</option>
+                        <option value="Under Inspection">Under Inspection</option>
+                        <option value="Waiting for Parts">Waiting for Parts</option>
+                        <option value="Repair In Progress">Repair In Progress</option>
+                        <option value="Ready for Pickup">Ready for Pickup</option>
+                        <option value="Delivered">Delivered</option>
+                    </select>
+
+                    <select id="adminBrandFilter" class="form-control" style="width: auto; min-width: 130px;">
+                        <option value="ALL">All Brands</option>
+                        <option value="Apple">Apple</option>
+                        <option value="Samsung">Samsung</option>
+                        <option value="OnePlus">OnePlus</option>
+                        <option value="Xiaomi">Xiaomi</option>
+                        <option value="Vivo">Vivo</option>
+                        <option value="Oppo">Oppo</option>
+                        <option value="Realme">Realme</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem;">
+                    <button type="button" id="exportCsvBtn" class="btn btn-secondary">
+                        <i class="fa-solid fa-file-excel" style="color: #10b981;"></i> Export to Excel
+                    </button>
+                    <button type="button" id="addNewRepairBtn" class="btn btn-primary">
+                        <i class="fa-solid fa-plus"></i> Add Walk-In Repair
+                    </button>
+                </div>
+            </div>
+
+            <!-- Repairs Data Table Card -->
+            <div class="glass-card" style="padding: 0; overflow: hidden;">
+                <div class="table-responsive">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Repair ID</th>
+                                <th>Customer Info</th>
+                                <th>Device / Model</th>
+                                <th>Service & Issue</th>
+                                <th>Live Status (Quick Update)</th>
+                                <th>Expected Date</th>
+                                <th>Est. Cost</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repairsTableBody">
+                            <!-- Populated dynamically via admin.js -->
+                        </tbody>
+                        <tfoot id="tableEmptyState" style="display: none;">
+                            <tr>
+                                <td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                                    <i class="fa-solid fa-magnifying-glass" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></i>
+                                    No repair records match your filter criteria.
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal: Add New Repair -->
+    <div class="modal-overlay" id="adminAddRepairModal">
+        <div class="modal-box" style="max-width: 650px;">
+            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+            <h3 style="font-size: 1.4rem; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.6rem;">
+                <i class="fa-solid fa-plus-circle" style="color: #38bdf8;"></i> Add Walk-In Repair Job
+            </h3>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.5rem;">
+                Log a customer device into the repair queue and auto-generate their tracking ID.
+            </p>
+
+            <form id="adminAddRepairForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addRepairId" class="form-label">Repair ID</label>
+                        <input type="text" id="addRepairId" class="form-control" style="font-weight: 800; color: #38bdf8;" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addCustName" class="form-label">Customer Name *</label>
+                        <input type="text" id="addCustName" class="form-control" placeholder="Full name" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addPhone" class="form-label">Contact Number *</label>
+                        <input type="tel" id="addPhone" class="form-control" placeholder="10-digit number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addEmail" class="form-label">Email (Optional)</label>
+                        <input type="email" id="addEmail" class="form-control" placeholder="email@example.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addBrand" class="form-label">Brand *</label>
+                        <select id="addBrand" class="form-control" required>
+                            <option value="Apple">Apple</option>
+                            <option value="Samsung">Samsung</option>
+                            <option value="OnePlus">OnePlus</option>
+                            <option value="Xiaomi">Xiaomi</option>
+                            <option value="Vivo">Vivo</option>
+                            <option value="Oppo">Oppo</option>
+                            <option value="Realme">Realme</option>
+                            <option value="Google">Google Pixel</option>
+                            <option value="Motorola">Motorola</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addModel" class="form-label">Device Model *</label>
+                        <input type="text" id="addModel" class="form-control" placeholder="e.g. iPhone 14 / Note 12" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addImei" class="form-label">IMEI / Serial (Optional)</label>
+                        <input type="text" id="addImei" class="form-control" placeholder="15-digit IMEI">
+                    </div>
+                    <div class="form-group">
+                        <label for="addServiceType" class="form-label">Service Type *</label>
+                        <select id="addServiceType" class="form-control" required>
+                            <option value="Display Change">Display Change</option>
+                            <option value="Battery Replacement">Battery Replacement</option>
+                            <option value="Charging Problem Repair">Charging Problem Repair</option>
+                            <option value="Software Installation">Software Installation</option>
+                            <option value="Water Damage Repair">Water Damage Repair</option>
+                            <option value="Mobile Repair">General Mobile Repair</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addCost" class="form-label">Estimated Cost (₹) *</label>
+                        <input type="number" id="addCost" class="form-control" placeholder="e.g. 1500" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addDeliveryDate" class="form-label">Expected Delivery Date *</label>
+                        <input type="date" id="addDeliveryDate" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addStatus" class="form-label">Initial Status</label>
+                        <select id="addStatus" class="form-control">
+                            <option value="Received">Received</option>
+                            <option value="Under Inspection">Under Inspection</option>
+                            <option value="Waiting for Parts">Waiting for Parts</option>
+                            <option value="Repair In Progress">Repair In Progress</option>
+                            <option value="Ready for Pickup">Ready for Pickup</option>
+                            <option value="Delivered">Delivered</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addNotes" class="form-label">Technician Notes</label>
+                        <input type="text" id="addNotes" class="form-control" placeholder="e.g. Outer glass shattered. Back cover intact.">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="addProblemDesc" class="form-label">Problem Description *</label>
+                    <textarea id="addProblemDesc" class="form-control" rows="2" placeholder="Customer reported symptoms..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1rem;">
+                    <i class="fa-solid fa-save"></i> Save Repair Record
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Repair Record -->
+    <div class="modal-overlay" id="adminEditRepairModal">
+        <div class="modal-box" style="max-width: 650px;">
+            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+            <h3 style="font-size: 1.4rem; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.6rem;">
+                <i class="fa-solid fa-pen-to-square" style="color: #38bdf8;"></i> Edit Repair Details
+            </h3>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.5rem;">
+                Update progress status, technician diagnosis, cost, or delivery date.
+            </p>
+
+            <form id="adminEditRepairForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editRepairId" class="form-label">Repair ID</label>
+                        <input type="text" id="editRepairId" class="form-control" readonly style="background: rgba(0,0,0,0.3); font-weight: 800; color: #38bdf8;">
+                    </div>
+                    <div class="form-group">
+                        <label for="editCustName" class="form-label">Customer Name</label>
+                        <input type="text" id="editCustName" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editPhone" class="form-label">Contact Phone</label>
+                        <input type="tel" id="editPhone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" id="editEmail" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editBrand" class="form-label">Brand</label>
+                        <select id="editBrand" class="form-control">
+                            <option value="Apple">Apple</option>
+                            <option value="Samsung">Samsung</option>
+                            <option value="OnePlus">OnePlus</option>
+                            <option value="Xiaomi">Xiaomi</option>
+                            <option value="Vivo">Vivo</option>
+                            <option value="Oppo">Oppo</option>
+                            <option value="Realme">Realme</option>
+                            <option value="Google">Google Pixel</option>
+                            <option value="Motorola">Motorola</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editModel" class="form-label">Device Model</label>
+                        <input type="text" id="editModel" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editImei" class="form-label">IMEI Number</label>
+                        <input type="text" id="editImei" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="editServiceType" class="form-label">Service Type</label>
+                        <select id="editServiceType" class="form-control">
+                            <option value="Display Change">Display Change</option>
+                            <option value="Battery Replacement">Battery Replacement</option>
+                            <option value="Charging Problem Repair">Charging Problem Repair</option>
+                            <option value="Software Installation">Software Installation</option>
+                            <option value="Water Damage Repair">Water Damage Repair</option>
+                            <option value="Mobile Repair">General Mobile Repair</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editStatus" class="form-label">Current Status</label>
+                        <select id="editStatus" class="form-control" style="font-weight: 700; color: #38bdf8;">
+                            <option value="Received">Received</option>
+                            <option value="Under Inspection">Under Inspection</option>
+                            <option value="Waiting for Parts">Waiting for Parts</option>
+                            <option value="Repair In Progress">Repair In Progress</option>
+                            <option value="Ready for Pickup">Ready for Pickup</option>
+                            <option value="Delivered">Delivered</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCost" class="form-label">Total Cost (₹)</label>
+                        <input type="number" id="editCost" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editDeliveryDate" class="form-label">Expected Delivery Date</label>
+                        <input type="date" id="editDeliveryDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editNotes" class="form-label">Technician Notes</label>
+                        <input type="text" id="editNotes" class="form-control" placeholder="Update test findings...">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editProblemDesc" class="form-label">Problem Description</label>
+                    <textarea id="editProblemDesc" class="form-control" rows="2" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1rem;">
+                    <i class="fa-solid fa-check"></i> Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Compat CDN) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    
+    <!-- Config & Scripts -->
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

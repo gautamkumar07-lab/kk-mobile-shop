@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Only the authorized administrator email can perform administrative actions
+    function isAuthorizedAdmin() {
+      return request.auth != null && request.auth.token.email.lower() == 'sambhadur328@gmail.com';
+    }
+
+    // Repairs Collection
+    match /repairs/{repairId} {
+      // Any customer can look up their individual repair tracking status by ID
+      allow get: if true;
+      
+      // Customers can submit a new repair request (create)
+      allow create: if request.resource.data.customerName is string
+                    && request.resource.data.phone is string
+                    && request.resource.data.brand is string
+                    && request.resource.data.model is string;
+
+      // Only the authorized administrator (sambhadur328@gmail.com) can list all repairs, update status, notes, or delete records
+      allow list, update, delete: if isAuthorizedAdmin();
+    }
+
+    // Customer Reviews Collection
+    match /reviews/{reviewId} {
+      // Anyone can read reviews
+      allow read: if true;
+      // Anyone can post a customer review
+      allow create: if request.resource.data.name is string
+                    && request.resource.data.rating is number;
+      // Only authorized administrator can delete or edit reviews
+      allow update, delete: if isAuthorizedAdmin();
+    }
+  }
+}
