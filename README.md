@@ -134,19 +134,22 @@ The website is already equipped with an intelligent **Hybrid Dual-Store Engine**
 
 ## 🌐 Deployment to GitHub & Vercel
 
-### Deploy to GitHub:
+### GitHub Repository:
+🔗 **Repository URL**: [https://github.com/gautamkumar07-lab/kk-mobile-shop](https://github.com/gautamkumar07-lab/kk-mobile-shop)
+
 ```bash
-git init
-git add .
-git commit -m "Initial commit of KK Mobile Shop website"
-git branch -M main
-git remote add origin https://github.com/your-username/kk-mobile-shop.git
-git push -u origin main
+# Clone the repository
+git clone https://github.com/gautamkumar07-lab/kk-mobile-shop.git
+cd kk-mobile-shop
+
+# Run local development server
+node server.js
 ```
 
 ### Deploy to Vercel:
-1. Push to GitHub.
-2. Go to [Vercel](https://vercel.com/) and click **"Add New Project"**.
-3. Import your `kk-mobile-shop` repository.
+1. Log in to [Vercel](https://vercel.com/) with your GitHub account.
+2. Click **"Add New Project"**.
+3. Select and import the **`gautamkumar07-lab/kk-mobile-shop`** repository.
 4. Framework Preset: **Other** (Static Site).
-5. Click **Deploy**. Vercel will automatically read `vercel.json` and deploy within seconds!
+5. Root Directory: `./` (leave default).
+6. Click **Deploy**. Vercel will automatically configure the routing according to `vercel.json` and deploy live within seconds!
